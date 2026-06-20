@@ -26,47 +26,73 @@ This project was developed as a learning-oriented cybersecurity project to under
 ## Project Structure
 
 IDS_project/
+
 ├── app/
+
 │ ├── alerts/
-│ │ └── alerts.p
+
+│ │ └── alerts.py
+
 │ │
+
 │ ├── detection/
+
 │ │ ├── detector.py
+
 │ │ └── rules.py
+
 │ │
+
 │ └── sniffer.py
+
 │
+
 ├── logs/
+
 │ └── alerts.log
+
+│
+
 ├── run.py
+
 ├── requirements.txt
+
 └── README.md
 
 ## How the System Works
 
 ### 1. Packet Capture
+
 The IDS continuously captures live network packets using the Scapy library. Every packet passing through the monitored interface is collected for further analysis.
 
 ### 2. Packet Analysis
+
 After capturing packets, the system extracts important information such as:
+
 * Source IP Address
 * Destination IP Address
 * Protocol Information
 * TCP Flags
 * Packet Payload Data
+
 This information is used to identify suspicious behavior.
 
 ### 3. Attack Detection
+
 #### Port Scan Detection
+
 The IDS monitors connection attempts to multiple ports from the same source IP address. If a host attempts to access several ports in a short period, the activity is flagged as a potential port scan.
 
 #### SYN Flood Detection
+
 The system tracks TCP SYN packets. When an unusually high number of SYN requests are received from the same source, the IDS generates a SYN Flood alert.
 
-#### ICMP Flood Detectio
+#### ICMP Flood Detection
+
 The IDS monitors ICMP Echo Requests (Ping packets). A large volume of ICMP packets within a short duration is treated as a possible ICMP Flood attack.
 
 #### SQL Injection Detection
+
 Packet payloads are inspected for common SQL Injection patterns such as:
 
 * ' OR '1'='1
@@ -76,7 +102,9 @@ Packet payloads are inspected for common SQL Injection patterns such as:
 If these keywords or patterns are detected, an SQL Injection alert is generated.
 
 ## Alert Logging
+
 All detected attacks are recorded in the log file:
+
 logs/alerts.log
 
 Example Alert Entries:
@@ -90,32 +118,41 @@ Example Alert Entries:
 [2026-05-10 03:07:20] [ALERT] Possible SQL Injection Attempt from 127.0.0.1
 
 ## Testing and Results
+
 The IDS was tested against multiple attack scenarios.
 
 ### Port Scan Testing
+
 Tool Used: Nmap
 
 Command:
+
 nmap -p 1-1000 127.0.0.1
 
 Result:
+
 The IDS successfully detected port scanning activity and generated an alert.
 
 ### SYN Flood Testing
+
 Tool Used: Hping3
 
 Command:
+
 sudo hping3 -S 127.0.0.1 -p 80 --flood
 
 Result:
+
 The IDS successfully detected excessive SYN packets and raised a SYN Flood alert.
 
 ### ICMP Flood Testing
 
 Command:
+
 ping -f 127.0.0.1
 
 Result:
+
 The IDS successfully detected ICMP Flood activity.
 
 ### SQL Injection Testing
